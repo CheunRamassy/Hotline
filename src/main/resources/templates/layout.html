@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />-->
+</head>
+<body>
+<aside class="sidebar" id="sidebar" th:fragment="navbar">
+    <nav class="sidebar__nav">
+        <h2 class="sidebar__title">Hotline</h2>
+        <ul class="sidebar__list">
+            <li><a href="#" class="sidebar__link"><i data-lucide="house" class="sidebar__icon"></i>Accueil</a></li>
+            <li><a href="#" class="sidebar__link"><i data-lucide="wrench" class="sidebar__icon"></i>Services</a></li>
+            <li><a href="#" class="sidebar__link"><i data-lucide="info" class="sidebar__icon"></i>À propos</a></li>
+            <li><a href="#" class="sidebar__link"><i data-lucide="contact" class="sidebar__icon"></i>Contact</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<script th:fragment="script" src="https://unpkg.com/lucide@latest/dist/umd/lucide.js">
+    document.getElementById("fileUpload").addEventListener("change", function(){
+        const fileList = document.querySelector(".file-list");
+        fileList.innerHTML = "";
+        Array.from(this.files).forEach(file => {
+            const li = document.createElement("li");
+            li.textContent = file.name;
+            fileList.appendChild(li);
+        });
+    });
+</script>
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>
