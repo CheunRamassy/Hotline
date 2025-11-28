@@ -16,7 +16,7 @@ public class Client {
     public Set<Contact> getContact() {return contact;}
     public void setContact(Set<Contact> contact) {this.contact = contact;}
 
-    @OneToMany(mappedBy = "numeroDocClient")
+    @OneToMany(mappedBy = "numeroClient")
     private Set<DocumentClient> documentClient;
     public Set<DocumentClient> getDocumentClient() {return documentClient;}
     public void setDocumentClient(Set<DocumentClient> documentClient) {this.documentClient = documentClient;}
