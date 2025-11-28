@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Document Client</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nom Utilisateur - Liste des fiches</title>
+  <link rel="stylesheet" th:href="@{/css/documentClient/index.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=search">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
+<aside th:replace="~{layout :: navbar}"></aside>
 
+<main class="main-content" role="main">
+  <header class="page-header">
+    <h1>Nom Utilisateur</h1>
+    <div class="button-new">
+      <a th:href="@{/Hotline/create}" role="button" aria-label="Créer une nouvelle fiche">nouvelle fiche</a>
+    </div>
+  </header>
+
+  <div class="search-section">
+    <label for="search-input" class="searchbar">
+      <i data-lucide="search" class="search-icon" aria-hidden="true"></i>
+      <input id="search-input" type="search" placeholder="Rechercher" aria-label="Rechercher dans la liste">
+    </label>
+  </div>
+
+  <section class="list-section" aria-labelledby="list-heading">
+    <h2 id="list-heading">Liste fiche</h2>
+
+    <div class="cards-container" role="list">
+      <article class="card" role="listitem">
+        <header class="card-header">
+          <div class="header-column">
+            <h3>Nom client</h3>
+<!--            <span class="status-indicator" aria-label="Champ obligatoire">*</span>-->
+          </div>
+          <div class="header-column">
+            <p>statut</p>
+<!--            <span class="status-indicator" aria-label="Champ obligatoire">*</span>-->
+          </div>
+          <i data-lucide="pencil" class="action-icon" aria-label="Modifier" aria-hidden="true"></i>
+        </header>
+        <div class="card-body">
+          <div class="body-row">
+            <div class="body-column">
+              <h4>num ticket</h4>
+              <p>13721</p>
+            </div>
+            <div class="body-column">
+              <p>date</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<script th:replace="~{layout :: script}"></script>
 </body>
 </html>
