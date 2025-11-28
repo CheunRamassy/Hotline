@@ -1,7 +1,9 @@
 package com.dreams.hotline.controller;
 
+import com.dreams.hotline.model.Client;
 import com.dreams.hotline.model.DocumentClient;
 import com.dreams.hotline.repository.DocumentClientRepository;
+import com.dreams.hotline.service.ClientService;
 import com.dreams.hotline.service.DocumentClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,34 +16,38 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-//@RequestMapping("/")
+@RequestMapping("/Hotline")
 public class DocumentClientController {
 
     @Autowired
     public final DocumentClientService documentClientService;
+    public final ClientService clientService;
 
-    public DocumentClientController(DocumentClientService documentClientService) {
+    public DocumentClientController(DocumentClientService documentClientService, ClientService clientService) {
         this.documentClientService = documentClientService;
+        this.clientService = clientService;
     }
 
     @GetMapping("/Dashboard")
     public String Dashboard(Model model) {
         List<DocumentClient> DocumentClients = documentClientService.getAllDocumentClients();
         model.addAttribute("DocmumentClients", DocumentClients);
-        return "DocumentClient/index";
+        return "documentClient/index";
     }
 
     @GetMapping("/view/{id}")
     public String ShowDocumentClient(@PathVariable("id") Long id, Model model) {
         Optional<DocumentClient> documentClient = documentClientService.getDocumentClientById(id);
         model.addAttribute("DocmumentClient", documentClient.get());
-        return "DocumentClient/view";
+        return "documentClient/view";
     }
 
-    @PostMapping("/create")
+    @GetMapping("/create")
     public String CreateDocumentClient(Model model) {
         model.addAttribute("DocmumentClient", new DocumentClient());
-        return "DocumentClient/create";
+        List<Client> allClients = clientService.getAllClients();
+        model.addAttribute("CLients", allClients);
+        return "documentClient/create";
     }
 
     @PostMapping("/save")
@@ -49,7 +55,7 @@ public class DocumentClientController {
                                      BindingResult result,
                                      RedirectAttributes redirectAttributes) {
         if(result.hasErrors()){
-            return "DocumentClient/create";
+            return "documentClient/create";
         }
 
         documentClientService.saveDocumentClient(documentClient);
@@ -61,7 +67,7 @@ public class DocumentClientController {
     public String EditDocumentClient(@PathVariable("id") Long id, Model model){
         Optional<DocumentClient> documentClient =  documentClientService.getDocumentClientById(id);
         model.addAttribute("DocmumentClient", documentClient.get());
-        return "DocumentClient/create";
+        return "documentClient/create";
     }
 
     @PostMapping("/delete/{id}")
