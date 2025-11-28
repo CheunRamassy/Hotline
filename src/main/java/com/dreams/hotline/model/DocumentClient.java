@@ -15,7 +15,17 @@ public class DocumentClient {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long numeroDocument;
+    private String objet;
     private Long type;
+    public enum Status {
+        EN_COURS_DE_TRAITEMENT,
+        EN_ATTENTE_DE_TRAITEMENT,
+        TERMINEE,
+
+    }
+    @Enumerated
+    private Status status;
+    private String message;
 
     public Long getId() {
         return id;
@@ -39,5 +49,29 @@ public class DocumentClient {
 
     public void setType(Long type) {
         this.type = type;
+    }
+
+    public String getObjet() {
+        return objet;
+    }
+
+    public void setObjet(String objet) {
+        this.objet = objet;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
