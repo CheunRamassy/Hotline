@@ -1,0 +1,116 @@
+/* 1️⃣ Variables globales */
+:root {
+    --sidebar-width: 260px;
+    --sidebar-bg: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%);
+    --sidebar-color: #f1f1f1;
+    --accent-color: #00c6ff;
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --font-main: 'Segoe UI', system-ui, sans-serif;
+    --transition: all 0.3s ease;
+}
+
+/* 2️⃣ Reset minimal */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main);
+    display: flex;
+    min-height: 100vh;
+    /*background-color: #fafafa;*/
+}
+
+/* 3️⃣ Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: var(--sidebar-color);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar__title {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+
+.sidebar__list {
+    list-style: none;
+}
+
+.sidebar__link {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--sidebar-color);
+    transition: var(--transition);
+    gap: 1rem;
+}
+
+.sidebar__link:hover,
+.sidebar__link:focus-visible {
+    background-color: var(--hover-bg);
+    color: var(--accent-color);
+    outline: none;
+}
+
+.sidebar__icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    stroke: currentColor;
+    stroke-width: 2;
+    margin-right: 0.6rem;
+}
+
+/* 4️⃣ Contenu principal */
+.main-content {
+    flex: 1;
+    padding: 2.5rem;
+    background-color: #ffffff;
+}
+
+/* 5️⃣ Bouton burger (caché sur grand écran) */
+.btn-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #111;
+    margin-bottom: 1.5rem;
+}
+
+/* 6️⃣ Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .sidebar--open {
+        transform: translateX(0);
+    }
+
+    .btn-toggle {
+        display: block;
+    }
+}
