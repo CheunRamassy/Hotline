@@ -1,10 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer une fiche</title>
+  <link rel="stylesheet" th:href="@{/css/documentClient/create.css}">
+  <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
+<aside th:replace="~{layout :: navbar}"></aside>
+
+<main class="main-content" role="main">
+    <form th:action="@{/Hotline/save}" th:object="${DocmumentClient}" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
+      <div class="form-content">
+        <header class="page-header">
+          <h1>Fiche n°</h1><h1 th:field="*{id}">numero de fiche</h1>
+        </header>
+
+        <div class="flex-select">
+          <label for="select-client">Client</label>
+          <select id="select-client" class="form-select" name="clientId" required>
+            <option value="">Sélectionnez un client</option>
+            <option th:each="jeu : ${allClients}"
+                    th:value="${allClients.id}"
+                    th:text="${allClients.name}"
+                    th:selected="${allClients.id == allClients.game?.id}">
+            </option>
+          </select>
+        </div>
+
+        <div id="client-input-div" class="position-input-client">
+          <label for="client-input">Nom Client </label>
+          <input id="client-input" class="barInput" type="text" th:field="*{numeroClient}" >
+        </div>
+
+        <div class="position-input">
+          <label for="objet-input">Objet</label>
+          <input id="objet-input" class="barInput" type="text" th:field="*{objet}" >
+        </div>
+
+        <div class="position-input">
+          <label for="message-input">Description</label>
+          <textarea id="message-input" class="barInput" th:field="*{objet}" ></textarea>
+
+        </div>
+
+        <div class="flex-select">
+          <label for="select-status"> Status</label>
+          <select id="select-status" required>
+            <option value="">Sélectionnez un status</option>
+            <option th:each="jeu : *{status}"></option>
+          </select>
+        </div>
+
+        <div class="dropbox-container">
+          <label for="fileUpload" class="dropbox">
+            <div class="dropbox-icon">📁</div>
+            <p>Glissez-déposez vos fichiers ici<br>ou cliquez pour les sélectionner</p>
+          </label>
+
+          <input type="file" id="fileUpload" name="files" multiple hidden>
+
+          <div class="file-count" id="fileCount"></div>
+          <ul class="file-list" id="fileList"></ul>
+        </div>
+
+        <div class="position-button">
+          <div class="button-retour">
+            <a th:href="@{/Hotline/Dashboard}" >⟵ Retour à la liste</a>
+          </div>
+
+          <button class="btn-send" type="submit">Envoyer</button>
+        </div>
+      </div>
+    </form>
+
+</main>
+<script>
+
+  document.getElementById("select-client").addEventListener("change", function () {
+    const div = document.getElementById("client-input-div")
+
+    if(this.value === "Client Divers"){
+      div.classList.remove("position-input-client");
+    } else{
+      div.classList.add("position-input-client")
+    }
+  })
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const dropbox = document.querySelector(".dropbox");
+    const upload = document.getElementById("fileUpload");
+    const fileList = document.getElementById("fileList");
+    const fileCount = document.getElementById("fileCount");
+
+    // DataTransfer pour gérer les fichiers
+    let dt = new DataTransfer();
+
+    function updateFileList() {
+      fileList.innerHTML = "";
+
+      if (dt.files.length === 0) {
+        fileCount.textContent = "";
+        return;
+      }
+
+      fileCount.textContent = `${dt.files.length} fichier(s) sélectionné(s)`;
+
+      Array.from(dt.files).forEach((file, index) => {
+        const li = document.createElement("li");
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "file-name";
+        nameSpan.textContent = file.name;
+
+        const sizeSpan = document.createElement("span");
+        sizeSpan.className = "file-size";
+        sizeSpan.textContent = formatFileSize(file.size);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.textContent = "✕";
+        removeBtn.type = "button";
+        removeBtn.onclick = function() {
+          removeFile(index);
+        };
+
+        li.appendChild(nameSpan);
+        li.appendChild(sizeSpan);
+        li.appendChild(removeBtn);
+        fileList.appendChild(li);
+      });
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    function removeFile(index) {
+      const newDt = new DataTransfer();
+      Array.from(dt.files).forEach((file, i) => {
+        if (i !== index) {
+          newDt.items.add(file);
+        }
+      });
+      dt = newDt;
+      upload.files = dt.files;
+      updateFileList();
+    }
+
+    // Gestion du changement de fichier
+    upload.addEventListener("change", function () {
+      Array.from(upload.files).forEach(file => {
+        dt.items.add(file);
+      });
+      upload.files = dt.files;
+      updateFileList();
+    });
+
+    // Gestion du drag & drop
+    dropbox.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      dropbox.style.background = "#d4ebff";
+    });
+
+    dropbox.addEventListener("dragleave", function() {
+      dropbox.style.background = "#f8fbff";
+    });
+
+    dropbox.addEventListener("drop", function(e) {
+      e.preventDefault();
+      dropbox.style.background = "#f8fbff";
+
+      const files = e.dataTransfer.files;
+      Array.from(files).forEach(file => {
+        dt.items.add(file);
+      });
+      upload.files = dt.files;
+      updateFileList();
+    });
+  });
+</script>
+<script th:replace="~{layout :: script}"></script>
+
 
 </body>
 </html>
